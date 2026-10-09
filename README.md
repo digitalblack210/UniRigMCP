@@ -6,11 +6,11 @@ Give an AI agent a 3D model and get it back with a skeleton. This is a small
 as Claude Code or Codex can rig a character as one step of a larger job. Nothing is uploaded
 and there is no cost per model.
 
-![A generated rat model, and the same model with the 24-bone skeleton UniRig gave it](docs/before-after.png)
+![One picture becomes a 3D model, which is rigged with 34 bones and then moves](docs/picture-to-rig.gif)
 
-*Left: a generated model, as handed to `start_rig`. Right: what came back 75 seconds later,
-drawn with its 24 bones. Spine, head and four legs are all there; the tail got bones only
-part of the way along.*
+*Step 3 is this server. Step 2 is not: the model was made from the picture with Microsoft's
+TRELLIS, a separate tool, and any model works as input. Step 4 is a short Blender script that
+turns every one of the 34 bones UniRig made; UniRig itself does not animate.*
 
 It is an unofficial wrapper. UniRig is the work of Tsinghua University and VAST (Tripo); its
 code is MIT-licensed. This repo holds no UniRig code or weights: the install script fetches
@@ -87,13 +87,25 @@ plus the bone list. `save_to` copies the rigged GLB into a folder of your choosi
 
 ## What to expect
 
-Measured on the RTX 5060 Ti with a 1.6 MB generated model of a rat: 75 seconds from start to
-rigged GLB, 24 bones.
+Measured on the RTX 5060 Ti:
+
+| Model | File | Time | Bones |
+|---|---|---|---|
+| Mechanical T. rex (above) | 3.8 MB | 69 s | 34 |
+| Rat | 1.6 MB | 75 s | 24 |
+
+![The T. rex model, and the same model with the skeleton UniRig gave it](docs/before-after.png)
+
+*Left: the model as handed to `start_rig`. Right: what came back. Spine, neck, a jaw bone,
+both arms and both legs down to the toes are there. The long tail got only three bones.*
 
 - **It rigs; it does not animate.** You get a posable model. Clips are made afterwards, in
   Blender or a game engine.
 - **Bones are named `bone_0`, `bone_1`, ...** Work out which is the spine and which is a leg
   from the parent links in the bone list.
+- **Check what each bone moves before animating it.** On the T. rex the two shoulder bones
+  were given most of the chest, so turning them pulled the belly about; the forearm bones
+  moved only the arms. In the clip above the shoulders barely turn for that reason.
 - **The skeleton is sampled.** The same model with another `seed` can come back with a
   different layout. When a limb is missing or misplaced, try another seed before anything else.
 - **One job at a time.** A second `start_rig` while one is running is refused with a message
@@ -108,7 +120,7 @@ server.py            the MCP server; also importable for tests
 scripts/install.sh   UniRig install for RTX 50-series cards
 scripts/rig.sh       the three UniRig steps for one model
 tests/               run with: python -m pytest
-docs/                the picture above
+docs/                the clip and picture above
 jobs/                one folder per job (ignored by git)
 ```
 
