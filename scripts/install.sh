@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Local UniRig install for an NVIDIA card, no sudo. Everything lives in ~/unirig (about 11 GB),
-# apart from model weights, which Hugging Face caches under ~/.cache/huggingface on first run.
+# Local UniRig install for an NVIDIA card, no sudo. Everything lives in ~/unirig (about 12 GB),
+# apart from model weights (5.5 GB), which Hugging Face caches under ~/.cache/huggingface on first run.
 # Run on Linux, or inside WSL on Windows:  bash scripts/install.sh   (safe to rerun)
 #
 # It differs from UniRig's own instructions because the RTX 50-series needs PyTorch 2.7.1 with

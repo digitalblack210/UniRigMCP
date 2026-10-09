@@ -6,6 +6,12 @@ Give an AI agent a 3D model and get it back with a skeleton. This is a small
 as Claude Code or Codex can rig a character as one step of a larger job. Nothing is uploaded
 and there is no cost per model.
 
+![A generated rat model, and the same model with the 24-bone skeleton UniRig gave it](docs/before-after.png)
+
+*Left: a generated model, as handed to `start_rig`. Right: what came back 75 seconds later,
+drawn with its 24 bones. Spine, head and four legs are all there; the tail got bones only
+part of the way along.*
+
 It is an unofficial wrapper. UniRig is the work of Tsinghua University and VAST (Tripo); its
 code is MIT-licensed. This repo holds no UniRig code or weights: the install script fetches
 them. Check the terms of the weights yourself before shipping anything rigged with them.
@@ -14,7 +20,8 @@ them. Check the terms of the weights yourself before shipping anything rigged wi
 
 - An NVIDIA GPU. Tested on an RTX 5060 Ti with 16 GB; less has not been tried.
 - Linux, or Windows with WSL 2 (tested on Ubuntu 24.04 under WSL).
-- About 11 GB of disk for UniRig, plus its weights in the Hugging Face cache.
+- About 12 GB of disk for UniRig, plus 5.5 GB for its weights, which download to the Hugging
+  Face cache the first time a model is rigged. That first run took 3.5 minutes here.
 - Python 3.10 or newer for the server itself.
 
 ## Install
@@ -101,6 +108,7 @@ server.py            the MCP server; also importable for tests
 scripts/install.sh   UniRig install for RTX 50-series cards
 scripts/rig.sh       the three UniRig steps for one model
 tests/               run with: python -m pytest
+docs/                the picture above
 jobs/                one folder per job (ignored by git)
 ```
 
