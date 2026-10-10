@@ -1,5 +1,11 @@
 # UniRigMCP
 
+[![CI](https://github.com/digitalblack210/UniRigMCP/actions/workflows/ci.yml/badge.svg)](https://github.com/digitalblack210/UniRigMCP/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)
+![Linux or Windows with WSL 2](https://img.shields.io/badge/platform-Linux%20%7C%20WSL%202-blue.svg)
+![NVIDIA GPU required](https://img.shields.io/badge/GPU-NVIDIA-76B900.svg)
+
 Give an AI agent a 3D model and get it back with a skeleton. This is a small
 [Model Context Protocol](https://modelcontextprotocol.io) server that runs
 [UniRig](https://github.com/VAST-AI-Research/UniRig) on your own NVIDIA card, so an agent such
