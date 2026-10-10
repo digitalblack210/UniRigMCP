@@ -26,9 +26,12 @@ them. Check the terms of the weights yourself before shipping anything rigged wi
 
 ## Install
 
-1. Install UniRig. On Windows run this inside WSL; it needs no sudo and is safe to rerun.
+1. Get this repo and install UniRig. On Windows run the install inside WSL; it needs no sudo
+   and is safe to rerun.
 
    ```bash
+   git clone https://github.com/digitalblack210/UniRigMCP.git
+   cd UniRigMCP
    bash scripts/install.sh
    ```
 

@@ -25,7 +25,15 @@ pip install torch==2.7.1 torchvision==0.22.1 --index-url https://download.pytorc
 python -c "import torch;print(torch.__version__,torch.cuda.is_available(),torch.cuda.get_device_name(0))"
 
 stage repo
-[ -d UniRig ] || git clone --depth 1 https://github.com/VAST-AI-Research/UniRig.git
+# The commit this install was tested against. A later one may move what the patch below edits.
+UNIRIG_COMMIT=6793c6640ff01c8fb389f3993434124bb43d2933
+if [ ! -d UniRig ]; then
+  rm -rf UniRig.partial
+  git init -q UniRig.partial
+  git -C UniRig.partial fetch -q --depth 1 https://github.com/VAST-AI-Research/UniRig.git "$UNIRIG_COMMIT"
+  git -C UniRig.partial checkout -q FETCH_HEAD
+  mv UniRig.partial UniRig
+fi
 git -C UniRig rev-parse HEAD
 
 stage requirements
