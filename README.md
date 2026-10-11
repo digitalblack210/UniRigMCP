@@ -15,7 +15,7 @@ and there is no cost per model.
 ![A 3D model is given 34 bones, and then every bone moves](docs/model-to-rig.gif)
 
 *This server does step 2. The model in step 1 was made from one picture with Microsoft's
-TRELLIS ([TrellisMCP](https://github.com/digitalblack210/TrellisMCP) is that step as a server),
+TRELLIS ([TRELLISMCP](https://github.com/digitalblack210/TRELLISMCP) is that step as a server),
 but any model works as input. Step 3 is a short Blender script that turns each bone in turn,
 because UniRig rigs a model and does not animate it.*
 
