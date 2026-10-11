@@ -12,11 +12,12 @@ Give an AI agent a 3D model and get it back with a skeleton. This is a small
 as Claude Code or Codex can rig a character as one step of a larger job. Nothing is uploaded
 and there is no cost per model.
 
-![One picture becomes a 3D model, which is rigged with 34 bones and then moves](docs/picture-to-rig.gif)
+![A 3D model is given 34 bones, and then every bone moves](docs/model-to-rig.gif)
 
-*Step 3 is this server. Step 2 is not: the model was made from the picture with Microsoft's
-TRELLIS, a separate tool, and any model works as input. Step 4 is a short Blender script that
-turns every one of the 34 bones UniRig made; UniRig itself does not animate.*
+*This server does step 2. The model in step 1 was made from one picture with Microsoft's
+TRELLIS ([TrellisMCP](https://github.com/digitalblack210/TrellisMCP) is that step as a server),
+but any model works as input. Step 3 is a short Blender script that turns each bone in turn,
+because UniRig rigs a model and does not animate it.*
 
 It is an unofficial wrapper. UniRig is the work of Tsinghua University and VAST (Tripo); its
 code is MIT-licensed. This repo holds no UniRig code or weights: the install script fetches
