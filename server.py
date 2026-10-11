@@ -71,6 +71,17 @@ def linux_path(path):
     return "/mnt/%s/%s" % (drive.lower(), "/".join(path.parts[1:]))
 
 
+def run_command(arguments):
+    """The command line that runs a script where UniRig lives.
+
+    A variable set for this server on Windows does not reach WSL by itself, so
+    UNIRIG_HOME is handed over on the command line.
+    """
+    home = os.getenv("UNIRIG_HOME", "").strip()
+    command = (["env", "UNIRIG_HOME=" + home] if home else []) + ["bash"] + arguments
+    return ["wsl.exe", "-e"] + command if ON_WINDOWS else command
+
+
 def read_bones(glb_path):
     """The skeleton stored in a GLB, as [{"name", "parent"}], without needing Blender.
 
@@ -211,11 +222,8 @@ def start_rig(model, seed=None):
     job_id = "%s-%s" % (time.strftime("%Y%m%d-%H%M%S"), os.urandom(3).hex())
     folder = JOBS / job_id
     folder.mkdir(parents=True)
-    arguments = ["bash", linux_path(RIG_SCRIPT), linux_path(source), linux_path(folder), str(seed)]
-    if ON_WINDOWS:
-        command, flags = ["wsl.exe", "-e"] + arguments, subprocess.CREATE_NO_WINDOW | subprocess.CREATE_NEW_PROCESS_GROUP
-    else:
-        command, flags = arguments, 0
+    command = run_command([linux_path(RIG_SCRIPT), linux_path(source), linux_path(folder), str(seed)])
+    flags = subprocess.CREATE_NO_WINDOW | subprocess.CREATE_NEW_PROCESS_GROUP if ON_WINDOWS else 0
     try:
         # Detached from this server's pipes: stdout belongs to the protocol, and the job must outlive a restart.
         process = subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,

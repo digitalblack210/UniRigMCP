@@ -26,33 +26,43 @@ them. Check the terms of the weights yourself before shipping anything rigged wi
 ## What you need
 
 - An NVIDIA GPU. Tested on an RTX 5060 Ti with 16 GB; less has not been tried.
-- Linux, or Windows with WSL 2 (tested on Ubuntu 24.04 under WSL).
+- Linux, or Windows with WSL 2 (tested on Ubuntu 24.04 under WSL). On Windows the server uses
+  your default WSL distribution.
+- `git`, `curl` and `bzip2` where UniRig will run. On Ubuntu: `sudo apt install git curl bzip2`.
 - About 12 GB of disk for UniRig, plus 5.5 GB for its weights, which download to the Hugging
   Face cache the first time a model is rigged. That first run took 3.5 minutes here.
 - Python 3.10 or newer for the server itself.
 
 ## Install
 
-1. Get this repo and install UniRig. On Windows run the install inside WSL; it needs no sudo
-   and is safe to rerun.
+1. Get this repo.
 
    ```bash
    git clone https://github.com/digitalblack210/UniRigMCP.git
-   cd UniRigMCP
-   bash scripts/install.sh
    ```
 
-   It installs into `~/unirig`. Set `UNIRIG_HOME` first to put it somewhere else, and set the
-   same variable for the server.
+   On Windows, clone it in Windows, not inside WSL: for example into `C:\UniRigMCP`. The
+   server runs in Windows and reaches into WSL by itself.
 
-2. Install the server's one dependency. On Windows do this in Windows, not WSL.
+2. Install UniRig. It needs no sudo and is safe to rerun.
+
+   ```bash
+   bash scripts/install.sh                         # Linux, from the repo folder
+   bash /mnt/c/UniRigMCP/scripts/install.sh        # Windows: run this inside WSL
+   ```
+
+   It installs into `~/unirig` and ends with `=== INSTALL DONE ===`. To install somewhere
+   else, set `UNIRIG_HOME` to a full Linux path before running the script, and give the server
+   the same `UNIRIG_HOME` in step 4.
+
+3. Install the server's one dependency. On Windows do this in Windows, not WSL.
 
    ```bash
    python -m venv .venv
    .venv/Scripts/pip install -r requirements.txt     # Linux: .venv/bin/pip
    ```
 
-3. Tell your agent about it. `UNIRIG_MCP_ROOTS` lists the folders the server may read models
+4. Tell your agent about it. `UNIRIG_MCP_ROOTS` lists the folders the server may read models
    from and save results to, separated by `;`. It refuses every other path.
 
    Claude Code, in a project's `.mcp.json`:
@@ -78,6 +88,10 @@ them. Check the terms of the weights yourself before shipping anything rigged wi
    env = { UNIRIG_MCP_ROOTS = "C:\\MyGame\\models" }
    tool_timeout_sec = 90
    ```
+
+5. Restart the agent and try it. Put a model in an allowed folder and ask, for example:
+
+   > Rig C:\MyGame\models\robot.glb and save the result beside it. List the bones.
 
 ## The tools
 
@@ -122,6 +136,19 @@ both arms and both legs down to the toes are there. The long tail got only three
   saying so.
 - **A failed job reports the end of UniRig's log** in `error`, so the agent can see whether it
   ran out of memory, could not read the file, or something else.
+
+## If it does not work
+
+| What you see | What to do |
+|---|---|
+| `... is outside the folders this server may use` | Add the model's folder to `UNIRIG_MCP_ROOTS` and restart the agent. |
+| `UniRig is not installed at ...` | Run `scripts/install.sh`, or set `UNIRIG_HOME` for the server to where you installed it. |
+| `Could not start UniRig` | On Windows, check that `wsl.exe` runs and that your default distribution is the one you installed into (`wsl -l -v`). |
+| `error` mentions `CUDA out of memory` | Close whatever else is using the GPU and start the job again. |
+| A limb has no bones, or bones are in the wrong place | Start again with another `seed`. |
+| The agent does not list the tools | Check the two paths in its configuration, then restart it. |
+
+Every job keeps its full log at `jobs/<id>/<name>_unirig.log`.
 
 ## Layout
 

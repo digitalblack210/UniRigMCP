@@ -116,3 +116,13 @@ def test_a_second_job_is_refused_while_one_runs(roots, monkeypatch):
     write_glb(model, {})
     with pytest.raises(RuntimeError, match="still rigging"):
         server.start_rig(str(model))
+
+
+def test_the_install_folder_is_handed_to_the_script(monkeypatch):
+    monkeypatch.delenv("UNIRIG_HOME", raising=False)
+    plain = server.run_command(["run.sh", "a"])
+    assert plain[-3:] == ["bash", "run.sh", "a"] and not any("UNIRIG_HOME" in part for part in plain)
+    monkeypatch.setenv("UNIRIG_HOME", "/opt/tools")
+    moved = server.run_command(["run.sh", "a"])
+    assert moved[-5:] == ["env", "UNIRIG_HOME=/opt/tools", "bash", "run.sh", "a"]
+    assert (moved[:2] == ["wsl.exe", "-e"]) == server.ON_WINDOWS
